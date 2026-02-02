@@ -64,7 +64,7 @@ export function MetaTable({ data }: { data: ParsedMetaRow[] }) {
             id="min-appearance"
             min={0}
             max={50}
-            step={1}
+            step={5}
             value={[minAppearance]}
             onValueChange={(values) => setMinAppearance(values[0])}
             className="flex-1"
