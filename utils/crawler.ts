@@ -1,5 +1,4 @@
 import * as cheerio from "cheerio";
-import _ from "lodash";
 
 const META_SITE_URL = "https://play.limitlesstcg.com/decks?game=POCKET";
 
