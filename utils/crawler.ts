@@ -156,7 +156,19 @@ export const getMeta = async () => {
 
     return parsed;
   } catch (error) {
-    console.error("Crawler parsing error:", error);
+    console.error("Crawler parsing error (getMeta):", error);
     return [];
+  }
+};
+
+export const getCurrentSet = async () => {
+  try {
+    const rawHtml = await fetchHtml();
+    const $ = cheerio.load(rawHtml);
+
+    return $("select#set").val();
+  } catch (error) {
+    console.error("Crawler parsing error (getCurrentSet):", error);
+    return undefined;
   }
 };

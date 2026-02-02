@@ -1,8 +1,13 @@
-import { getMeta } from "@/utils/crawler";
+import { getCurrentSet, getMeta, type ParsedMetaRow } from "@/utils/crawler";
 import { MetaTable } from "@/components/MetaTable";
 
 export default async function Home() {
-  const data = await getMeta();
+  const requests = [getMeta(), getCurrentSet()];
+
+  const [data, currentSet] = (await Promise.all(requests)) as [
+    ParsedMetaRow[],
+    string | undefined,
+  ];
 
   if (!data || data.length === 0) {
     return (
@@ -35,7 +40,8 @@ export default async function Home() {
       <div className="mb-10">
         <h1 className="text-3xl font-bold tracking-tight">PTCGP Meta</h1>
         <p className="text-muted-foreground mt-1">
-          Competitive deck statistics scraped from Limitless TCG.
+          Competitive deck statistics scraped from Limitless TCG. (Set:{" "}
+          {currentSet})
         </p>
       </div>
 

@@ -15,6 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://ptcg-pocket-meta.vercel.app/"), // Placeholder, typically replaced with actual domain
   title: "PTCGP Meta | Pokemon TCG Pocket Meta Tracker",
   description:
     "Real-time meta data and deck statistics for Pokemon TCG Pocket. Track winning decks and competitive trends from Limitless TCG.",
@@ -24,6 +25,15 @@ export const metadata: Metadata = {
     title: "PTCGP Meta | Pokemon TCG Pocket Meta Tracker",
     description: "Track the competitive meta for Pokemon TCG Pocket.",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "PTCGP Meta | Pokemon TCG Pocket Meta Tracker",
+    description: "Track the competitive meta for Pokemon TCG Pocket.",
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 
