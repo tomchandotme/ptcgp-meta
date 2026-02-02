@@ -11,27 +11,6 @@ import { getWinRateColor } from "@/utils/utils";
 
 export const columns: ColumnDef<ParsedMetaRow>[] = [
   {
-    accessorKey: "position",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          size="sm"
-          className="data-[state=open]:bg-accent -ml-3 h-8"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          <span>Rank</span>
-          <ArrowUpDown className="ml-2 h-3 w-3" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => (
-      <div className="text-muted-foreground pl-4 font-mono text-xs">
-        {row.getValue("position")}
-      </div>
-    ),
-  },
-  {
     accessorKey: "deck",
     header: "Deck",
     cell: ({ row }) => {
