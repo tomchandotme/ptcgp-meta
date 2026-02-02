@@ -52,6 +52,8 @@ export const columns: ColumnDef<ParsedMetaRow>[] = [
     header: "Deck",
     cell: ({ row }) => {
       const images: string[] = row.original.pokemonImages || [];
+      const deck: string = row.original.deck;
+      const deckUrl: string = row.original.deckUrl || "#";
       return (
         <div className="flex items-center gap-3 py-1">
           <div className="flex -space-x-3">
@@ -68,9 +70,9 @@ export const columns: ColumnDef<ParsedMetaRow>[] = [
               </div>
             ))}
           </div>
-          <span className="font-semibold tracking-tight">
-            {row.getValue("deck")}
-          </span>
+          <a href={deckUrl} target="_blank">
+            <span className="font-semibold tracking-tight">{deck}</span>
+          </a>
         </div>
       );
     },
@@ -91,7 +93,9 @@ export const columns: ColumnDef<ParsedMetaRow>[] = [
       );
     },
     cell: ({ row }) => (
-      <div className="text-center font-medium">{row.getValue("count")}</div>
+      <div className="text-center font-mono font-medium">
+        {row.getValue("count")}
+      </div>
     ),
   },
   {
@@ -112,7 +116,7 @@ export const columns: ColumnDef<ParsedMetaRow>[] = [
     cell: ({ row }) => {
       const val = parseFloat(row.getValue("sharePercent"));
       return (
-        <div className="text-muted-foreground text-center">
+        <div className="text-muted-foreground text-center font-mono">
           {val.toFixed(1)}%
         </div>
       );
@@ -138,7 +142,7 @@ export const columns: ColumnDef<ParsedMetaRow>[] = [
       if (isNaN(val))
         return <div className="text-muted-foreground text-center">-</div>;
       return (
-        <div className="text-center">
+        <div className="text-center font-mono">
           <Badge
             variant="outline"
             className={
@@ -156,6 +160,8 @@ export const columns: ColumnDef<ParsedMetaRow>[] = [
 ];
 
 export function MetaTable({ data }: { data: ParsedMetaRow[] }) {
+  "use no memo";
+
   const [sorting, setSorting] = useState<SortingState>([
     { id: "sharePercent", desc: true },
   ]);
@@ -165,6 +171,7 @@ export function MetaTable({ data }: { data: ParsedMetaRow[] }) {
     return data.filter((row) => (row.count ?? 0) >= minAppearance);
   }, [data, minAppearance]);
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: filteredData,
     columns,
@@ -206,9 +213,9 @@ export function MetaTable({ data }: { data: ParsedMetaRow[] }) {
         </div>
       </div>
 
-      <div className="bg-card overflow-hidden rounded-xl border shadow-sm">
+      <div className="bg-card relative max-h-200 overflow-auto rounded-xl border shadow-sm">
         <Table>
-          <TableHeader className="bg-muted/50">
+          <TableHeader className="bg-muted/50 sticky top-0 z-10 shadow-sm">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="hover:bg-transparent">
                 {headerGroup.headers.map((header) => {

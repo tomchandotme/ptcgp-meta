@@ -19,8 +19,11 @@ This is a Next.js (App Router) project focused on tracking Pokémon Trading Card
 - **Crawler Logic**: Core parsing logic resides in `utils/crawler.ts`. It fetches HTML from `play.limitlesstcg.com` and scrapes it using `cheerio` and `lodash`.
 - **Data Flow**:
   - `app/page.tsx` is a server component that calls `getMeta()` from the crawler utility.
-  - The fetched meta data is passed to the view (currently rendered as raw JSON).
+  - The fetched meta data is passed to `components/MetaTable.tsx` for interactive display and filtering.
+- **Documentation**:
+  - Detailed codemaps are located in `docs/CODEMAPS/`.
 - **Key Files**:
   - `utils/crawler.ts`: Scraper implementation for the Limitless TCG meta site.
   - `app/page.tsx`: Main page entry point.
+  - `components/MetaTable.tsx`: Interactive data table component.
   - `eslint.config.mjs`: Modern ESLint flat configuration.
