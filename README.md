@@ -50,6 +50,7 @@ This project follows the Next.js App Router architecture with a focus on server-
 - **UI System**: Tailwind CSS 4 with Radix UI primitives and Lucide icons.
 
 Detailed architecture maps can be found in [docs/CODEMAPS/](docs/CODEMAPS/architecture.md):
+
 - [Overall Architecture](docs/CODEMAPS/architecture.md)
 - [Backend Structure](docs/CODEMAPS/backend.md)
 - [Frontend Structure](docs/CODEMAPS/frontend.md)

@@ -15,8 +15,16 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PTCGP Meta",
-  description: "Real-time meta data for Pokemon TCG Pocket",
+  title: "PTCGP Meta | Pokemon TCG Pocket Meta Tracker",
+  description:
+    "Real-time meta data and deck statistics for Pokemon TCG Pocket. Track winning decks and competitive trends from Limitless TCG.",
+  keywords: ["PTCGP", "Pokemon TCG Pocket", "Meta", "Decks", "Statistics"],
+  authors: [{ name: "PTCGP Meta" }],
+  openGraph: {
+    title: "PTCGP Meta | Pokemon TCG Pocket Meta Tracker",
+    description: "Track the competitive meta for Pokemon TCG Pocket.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({

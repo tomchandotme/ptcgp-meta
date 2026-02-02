@@ -1,0 +1,8 @@
+# www.robotstxt.org/
+
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://ptcgp-meta.vercel.app/sitemap.xml

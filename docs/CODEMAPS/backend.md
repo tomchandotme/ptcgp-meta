@@ -9,9 +9,9 @@ The "backend" of this application primarily consists of server-side data fetchin
 
 ### Key Functions
 
-| Function | Purpose |
-|----------|---------|
-| `getMeta()` | Main entry point for fetching and parsing meta data. |
+| Function      | Purpose                                                 |
+| ------------- | ------------------------------------------------------- |
+| `getMeta()`   | Main entry point for fetching and parsing meta data.    |
 | `fetchHtml()` | Fetches raw HTML from Limitless TCG with `force-cache`. |
 
 ### Logic Flow
