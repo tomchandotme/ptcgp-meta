@@ -7,6 +7,7 @@ import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ParsedMetaRow } from "@/utils/crawler";
+import { getWinRateColor } from "@/utils/utils";
 
 export const columns: ColumnDef<ParsedMetaRow>[] = [
   {
@@ -126,14 +127,7 @@ export const columns: ColumnDef<ParsedMetaRow>[] = [
         return <div className="text-muted-foreground text-center">-</div>;
       return (
         <div className="text-center font-mono">
-          <Badge
-            variant="outline"
-            className={
-              val >= 50
-                ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                : "border-orange-500/50 bg-orange-500/10 text-orange-600 dark:text-orange-400"
-            }
-          >
+          <Badge variant="outline" className={getWinRateColor(val)}>
             {val.toFixed(1)}%
           </Badge>
         </div>
