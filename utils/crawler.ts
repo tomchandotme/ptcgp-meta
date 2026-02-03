@@ -161,12 +161,27 @@ export const getMeta = async () => {
   }
 };
 
-export const getCurrentSet = async () => {
+export const getCurrentSet = async (): Promise<string | undefined> => {
   try {
     const rawHtml = await fetchHtml();
     const $ = cheerio.load(rawHtml);
 
-    return $("select#set").val();
+    const normalize = (s: string) => s.trim().replace(/\s+/g, " ");
+
+    const rawSetVal = $("select#set").val();
+    const setName =
+      typeof rawSetVal === "string"
+        ? normalize(rawSetVal)
+        : Array.isArray(rawSetVal)
+          ? normalize(rawSetVal.join(" "))
+          : undefined;
+
+    const description = normalize($(".container.content > p").text() || "");
+
+    if (setName && description) return `${setName} (${description})`;
+    if (setName) return setName;
+    if (description) return description;
+    return undefined;
   } catch (error) {
     console.error("Crawler parsing error (getCurrentSet):", error);
     return undefined;

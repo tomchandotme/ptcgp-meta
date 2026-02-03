@@ -31,19 +31,15 @@ export default function Loading() {
           <Table>
             <TableHeader className="bg-muted/50">
               <TableRow>
-                <TableHead className="w-12.5"></TableHead>
                 <TableHead>Deck</TableHead>
                 <TableHead>Count</TableHead>
                 <TableHead>Share</TableHead>
-                <TableHead>Win %</TableHead>
+                <TableHead>Win Rate</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {Array.from({ length: 10 }).map((_, i) => (
                 <TableRow key={i}>
-                  <TableCell>
-                    <Skeleton className="h-4 w-4" />
-                  </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <Skeleton className="h-6 w-12 rounded-sm" />

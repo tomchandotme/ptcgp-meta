@@ -40,8 +40,8 @@ export default async function Home() {
       <div className="mb-10">
         <h1 className="text-3xl font-bold tracking-tight">PTCGP Meta</h1>
         <p className="text-muted-foreground mt-1">
-          Competitive deck statistics scraped from Limitless TCG. (Set:{" "}
-          {currentSet})
+          Competitive deck statistics scraped from Limitless TCG. <br />
+          Set: {currentSet}
         </p>
       </div>
 
