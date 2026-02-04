@@ -46,6 +46,28 @@ describe("parseDeckName", () => {
     ]);
   });
 
+  test("handles Ogerpon mask prefixes", () => {
+    expect(parseDeckName("Teal Mask Ogerpon ex")).toEqual([
+      "Teal Mask Ogerpon ex",
+    ]);
+    expect(parseDeckName("Wellspring Mask Ogerpon ex")).toEqual([
+      "Wellspring Mask Ogerpon ex",
+    ]);
+    expect(parseDeckName("Hearthflame Mask Ogerpon ex")).toEqual([
+      "Hearthflame Mask Ogerpon ex",
+    ]);
+    expect(parseDeckName("Cornerstone Mask Ogerpon ex")).toEqual([
+      "Cornerstone Mask Ogerpon ex",
+    ]);
+  });
+
+  test("handles multiple pokemon with mask prefixes", () => {
+    expect(parseDeckName("Teal Mask Ogerpon ex Regidrago VSTAR")).toEqual([
+      "Teal Mask Ogerpon ex",
+      "Regidrago",
+    ]);
+  });
+
   test("handles empty or null input", () => {
     expect(parseDeckName("")).toEqual([]);
   });

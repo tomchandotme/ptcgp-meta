@@ -45,12 +45,27 @@ export function getWinRateColor(winRate: number): string {
 export function parseDeckName(deck: string): string[] {
   if (!deck) return [];
 
-  // Prefixes: Mega, Alolan, Galarian, Hisuian, Paldean
-  // Suffixes: ex
-  // We match sequences that start with optional prefixes, followed by a name, followed by optional "ex"
-  const prefixes = "(?:(?:Mega|Alolan|Galarian|Hisuian|Paldean)\\s+)*";
-  const suffix = "(?:\\s+ex)?";
-  const pokemonPattern = new RegExp(`${prefixes}[A-Z][a-z]+${suffix}`, "g");
+  const PREFIXES = [
+    // Mega
+    "Mega",
+    // regional prefixes
+    "Alolan",
+    "Galarian",
+    "Hisuian",
+    "Paldean",
+    // Ogerpon masks prefixes
+    "Teal Mask",
+    "Wellspring Mask",
+    "Hearthflame Mask",
+    "Cornerstone Mask",
+  ];
+
+  const prefixPattern = `(?:(?:${PREFIXES.join("|")})\\s+)*`;
+  const suffixPattern = "(?:\\s+ex)?";
+  const pokemonPattern = new RegExp(
+    `${prefixPattern}[A-Z][a-z]+${suffixPattern}`,
+    "g",
+  );
 
   const matches = deck.match(pokemonPattern);
   return matches || [deck];
