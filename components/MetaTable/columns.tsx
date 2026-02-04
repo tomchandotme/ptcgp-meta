@@ -4,7 +4,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { ParsedMetaRow } from "@/utils/crawler";
-import { getWinRateColor } from "@/utils/utils";
+import { getWinRateColor, parseDeckName } from "@/utils/utils";
 import { SortableHeader } from "./SortableHeader";
 
 export const columns: ColumnDef<ParsedMetaRow>[] = [
@@ -15,9 +15,11 @@ export const columns: ColumnDef<ParsedMetaRow>[] = [
       const images: string[] = row.original.pokemonImages || [];
       const deck: string = row.original.deck;
       const deckUrl: string = row.original.deckUrl || "#";
+      const pokemonNames = parseDeckName(deck);
+
       return (
         <div className="flex items-center gap-3 py-1">
-          <div className="flex -space-x-3">
+          <div className="flex min-w-17 -space-x-3">
             {images.map((src, i) => (
               <div
                 key={i}
@@ -31,8 +33,19 @@ export const columns: ColumnDef<ParsedMetaRow>[] = [
               </div>
             ))}
           </div>
-          <a href={deckUrl} target="_blank">
-            <span className="font-semibold tracking-tight">{deck}</span>
+          <a href={deckUrl} target="_blank" className="flex flex-col gap-0.5">
+            {pokemonNames.map((name, i) => (
+              <span
+                key={i}
+                className={`leading-none tracking-tight ${
+                  i === 0
+                    ? "text-foreground font-bold"
+                    : "text-muted-foreground text-sm font-medium"
+                }`}
+              >
+                {name}
+              </span>
+            ))}
           </a>
         </div>
       );

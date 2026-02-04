@@ -33,3 +33,25 @@ export function getWinRateColor(winRate: number): string {
   }
   return "border-rose-500/50 bg-rose-500/10 text-rose-600 dark:text-rose-400";
 }
+
+/**
+ * Parses a deck name into individual Pokémon names.
+ * Handles prefixes like "Mega", regional prefixes ("Alolan", "Galarian", "Hisuian", "Paldean"),
+ * and suffixes like "ex".
+ *
+ * Example: "Mega Alolan Exeggutor ex" -> ["Mega Alolan Exeggutor ex"]
+ * Example: "Palkia ex Dialga ex" -> ["Palkia ex", "Dialga ex"]
+ */
+export function parseDeckName(deck: string): string[] {
+  if (!deck) return [];
+
+  // Prefixes: Mega, Alolan, Galarian, Hisuian, Paldean
+  // Suffixes: ex
+  // We match sequences that start with optional prefixes, followed by a name, followed by optional "ex"
+  const prefixes = "(?:(?:Mega|Alolan|Galarian|Hisuian|Paldean)\\s+)*";
+  const suffix = "(?:\\s+ex)?";
+  const pokemonPattern = new RegExp(`${prefixes}[A-Z][a-z]+${suffix}`, "g");
+
+  const matches = deck.match(pokemonPattern);
+  return matches || [deck];
+}
