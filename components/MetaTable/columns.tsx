@@ -2,12 +2,10 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ParsedMetaRow } from "@/utils/crawler";
 import { getWinRateColor } from "@/utils/utils";
+import { SortableHeader } from "./SortableHeader";
 
 export const columns: ColumnDef<ParsedMetaRow>[] = [
   {
@@ -42,42 +40,23 @@ export const columns: ColumnDef<ParsedMetaRow>[] = [
   },
   {
     accessorKey: "count",
-    header: ({ column }) => {
+    header: ({ column }) => <SortableHeader column={column} title="Count" />,
+    cell: ({ row }) => {
+      const val = row.getValue("count");
       return (
-        <Button
-          variant="ghost"
-          size="sm"
-          className="data-[state=open]:bg-accent -ml-3 h-8"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          <span>Count</span>
-          <ArrowUpDown className="ml-2 h-3 w-3" />
-        </Button>
+        <div className="text-center font-mono font-medium">
+          {typeof val === "number" ? val : "-"}
+        </div>
       );
     },
-    cell: ({ row }) => (
-      <div className="text-center font-mono font-medium">
-        {row.getValue("count")}
-      </div>
-    ),
   },
   {
     accessorKey: "sharePercent",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          size="sm"
-          className="data-[state=open]:bg-accent -ml-3 h-8"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          <span>Share</span>
-          <ArrowUpDown className="ml-2 h-3 w-3" />
-        </Button>
-      );
-    },
+    header: ({ column }) => <SortableHeader column={column} title="Share" />,
     cell: ({ row }) => {
       const val = parseFloat(row.getValue("sharePercent"));
+      if (isNaN(val))
+        return <div className="text-muted-foreground text-center font-mono">-</div>;
       return (
         <div className="text-muted-foreground text-center font-mono">
           {val.toFixed(1)}%
@@ -86,24 +65,24 @@ export const columns: ColumnDef<ParsedMetaRow>[] = [
     },
   },
   {
-    accessorKey: "winPercent",
-    header: ({ column }) => {
+    accessorKey: "total",
+    header: ({ column }) => <SortableHeader column={column} title="Matches" />,
+    cell: ({ row }) => {
+      const val = row.getValue("total");
       return (
-        <Button
-          variant="ghost"
-          size="sm"
-          className="data-[state=open]:bg-accent -ml-3 h-8"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          <span>Win Rate</span>
-          <ArrowUpDown className="ml-2 h-3 w-3" />
-        </Button>
+        <div className="text-center font-mono font-medium">
+          {typeof val === "number" ? val : 0}
+        </div>
       );
     },
+  },
+  {
+    accessorKey: "winPercent",
+    header: ({ column }) => <SortableHeader column={column} title="Win Rate" />,
     cell: ({ row }) => {
       const val = parseFloat(row.getValue("winPercent"));
       if (isNaN(val))
-        return <div className="text-muted-foreground text-center">-</div>;
+        return <div className="text-muted-foreground text-center font-mono">-</div>;
       return (
         <div className="text-center font-mono">
           <Badge variant="outline" className={getWinRateColor(val)}>
