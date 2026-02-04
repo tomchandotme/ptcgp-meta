@@ -34,6 +34,7 @@ export default function Loading() {
                 <TableHead>Deck</TableHead>
                 <TableHead>Count</TableHead>
                 <TableHead>Share</TableHead>
+                <TableHead>Matches</TableHead>
                 <TableHead>Win Rate</TableHead>
               </TableRow>
             </TableHeader>
@@ -48,6 +49,9 @@ export default function Loading() {
                   </TableCell>
                   <TableCell>
                     <Skeleton className="h-4 w-8" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-12" />
                   </TableCell>
                   <TableCell>
                     <Skeleton className="h-4 w-12" />
