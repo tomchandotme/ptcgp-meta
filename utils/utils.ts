@@ -60,10 +60,13 @@ export function parseDeckName(deck: string): string[] {
     "Cornerstone Mask",
   ];
 
+  const SUFFIXES = ["X", "Y", "ex"];
+
   const prefixPattern = `(?:(?:${PREFIXES.join("|")})\\s+)*`;
-  const suffixPattern = "(?:\\s+ex)?";
+  const suffixPattern = `(?:\\s+(?:${SUFFIXES.join("|")}))*`;
+
   const pokemonPattern = new RegExp(
-    `${prefixPattern}[A-Z][a-z]+${suffixPattern}`,
+    `${prefixPattern}[A-Z][a-z]*(?:-[A-Z][a-z]*)*${suffixPattern}`,
     "g",
   );
 

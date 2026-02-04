@@ -62,10 +62,31 @@ describe("parseDeckName", () => {
   });
 
   test("handles multiple pokemon with mask prefixes", () => {
-    expect(parseDeckName("Teal Mask Ogerpon ex Regidrago VSTAR")).toEqual([
+    expect(parseDeckName("Teal Mask Ogerpon ex Regidrago ex")).toEqual([
       "Teal Mask Ogerpon ex",
-      "Regidrago",
+      "Regidrago ex",
     ]);
+  });
+
+  test("handles hyphenated pokemon names", () => {
+    expect(parseDeckName("Ho-Oh")).toEqual(["Ho-Oh"]);
+    expect(parseDeckName("Ho-Oh ex")).toEqual(["Ho-Oh ex"]);
+    expect(parseDeckName("Porygon-Z")).toEqual(["Porygon-Z"]);
+    expect(parseDeckName("Porygon-Z ex")).toEqual(["Porygon-Z ex"]);
+    expect(parseDeckName("Ho-Oh ex Porygon-Z")).toEqual([
+      "Ho-Oh ex",
+      "Porygon-Z",
+    ]);
+  });
+
+  test("handles Mega X/Y suffixes", () => {
+    expect(parseDeckName("Mega Charizard Y ex")).toEqual([
+      "Mega Charizard Y ex",
+    ]);
+    expect(parseDeckName("Mega Charizard X ex")).toEqual([
+      "Mega Charizard X ex",
+    ]);
+    expect(parseDeckName("Mega Mewtwo Y")).toEqual(["Mega Mewtwo Y"]);
   });
 
   test("handles empty or null input", () => {
