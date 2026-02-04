@@ -1,6 +1,7 @@
 import { Column } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/utils/utils";
 
 interface SortableHeaderProps<TData, TValue> {
   column: Column<TData, TValue>;
@@ -10,14 +11,27 @@ interface SortableHeaderProps<TData, TValue> {
 export const SortableHeader = <TData, TValue>({
   column,
   title,
-}: SortableHeaderProps<TData, TValue>) => (
-  <Button
-    variant="ghost"
-    size="sm"
-    className="data-[state=open]:bg-accent -ml-3 h-8"
-    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-  >
-    <span>{title}</span>
-    <ArrowUpDown className="ml-2 h-3 w-3" />
-  </Button>
-);
+}: SortableHeaderProps<TData, TValue>) => {
+  const isSorted = column.getIsSorted();
+
+  return (
+    <Button
+      variant="ghost"
+      size="sm"
+      className={cn(
+        "data-[state=open]:bg-accent -ml-3 h-8",
+        isSorted && "text-foreground font-semibold",
+      )}
+      onClick={() => column.toggleSorting(isSorted === "asc")}
+    >
+      <span>{title}</span>
+      {isSorted === "desc" ? (
+        <ArrowDown className="ml-2 h-3.5 w-3.5" />
+      ) : isSorted === "asc" ? (
+        <ArrowUp className="ml-2 h-3.5 w-3.5" />
+      ) : (
+        <ArrowUpDown className="ml-2 h-3.5 w-3.5 opacity-50" />
+      )}
+    </Button>
+  );
+};

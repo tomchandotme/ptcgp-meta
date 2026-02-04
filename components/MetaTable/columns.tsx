@@ -56,7 +56,9 @@ export const columns: ColumnDef<ParsedMetaRow>[] = [
     cell: ({ row }) => {
       const val = parseFloat(row.getValue("sharePercent"));
       if (isNaN(val))
-        return <div className="text-muted-foreground text-center font-mono">-</div>;
+        return (
+          <div className="text-muted-foreground text-center font-mono">-</div>
+        );
       return (
         <div className="text-muted-foreground text-center font-mono">
           {val.toFixed(1)}%
@@ -82,7 +84,9 @@ export const columns: ColumnDef<ParsedMetaRow>[] = [
     cell: ({ row }) => {
       const val = parseFloat(row.getValue("winPercent"));
       if (isNaN(val))
-        return <div className="text-muted-foreground text-center font-mono">-</div>;
+        return (
+          <div className="text-muted-foreground text-center font-mono">-</div>
+        );
       return (
         <div className="text-center font-mono">
           <Badge variant="outline" className={getWinRateColor(val)}>
