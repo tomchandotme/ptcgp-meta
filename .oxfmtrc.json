@@ -1,7 +1,9 @@
 {
-	"$schema": "./node_modules/oxfmt/configuration_schema.json",
-	"experimentalTailwindcss": {},
-	"printWidth": 80,
-	"experimentalSortPackageJson": false,
-	"ignorePatterns": []
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "experimentalTailwindcss": {},
+  "printWidth": 80,
+  "experimentalSortPackageJson": false,
+  "ignorePatterns": [],
+  "tabWidth": 2,
+  "useTabs": false
 }
