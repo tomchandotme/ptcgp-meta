@@ -4,7 +4,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { ParsedMetaRow } from "@/utils/crawler";
-import { getWinRateColor, parseDeckName } from "@/utils/utils";
+import { cn, getWinRateColor, parseDeckName } from "@/utils/utils";
 import { SortableHeader } from "./SortableHeader";
 
 export const columns: ColumnDef<ParsedMetaRow>[] = [
@@ -19,11 +19,17 @@ export const columns: ColumnDef<ParsedMetaRow>[] = [
 
       return (
         <div className="flex items-center gap-3 py-1">
-          <div className="flex min-w-17 -space-x-3">
+          <div className="flex min-w-16 -space-x-3">
             {images.map((src, i) => (
               <div
                 key={i}
-                className="border-background bg-muted relative h-10 w-10 overflow-hidden rounded-full border-2 shadow-sm transition-transform hover:z-10 hover:scale-110"
+                className={cn(
+                  "relative size-10 overflow-hidden drop-shadow transition-transform hover:z-10 hover:scale-110",
+                  {
+                    "-mr-4 mb-4": images.length === 2 && i == 0,
+                    "mt-4": images.length === 2 && i == 1,
+                  },
+                )}
               >
                 <img
                   src={src}

@@ -1,6 +1,11 @@
 {
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
-  "experimentalTailwindcss": {},
+  "experimentalTailwindcss": {
+    "stylesheet": "app/global.css",
+    "attributes": ["class", "className"],
+    "functions": ["clsx", "cn"],
+    "preserveWhitespace": false
+  },
   "printWidth": 80,
   "experimentalSortPackageJson": false,
   "ignorePatterns": [],
