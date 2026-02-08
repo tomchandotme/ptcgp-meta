@@ -23,6 +23,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ParsedMetaRow } from "@/utils/crawler";
 import { columns } from "./columns";
+import { parseDeckName } from "@/utils/utils";
 
 export function MetaTable({ data }: { data: ParsedMetaRow[] }) {
   "use no memo";
@@ -32,6 +33,12 @@ export function MetaTable({ data }: { data: ParsedMetaRow[] }) {
   ]);
   const [minAppearance, setMinAppearance] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const placeholder = useMemo(() => {
+    const topPokemons = data.slice(0, 2).map((v) => parseDeckName(v.deck)[0]);
+
+    return `Ex: ${topPokemons.join(", ")}...`;
+  }, [data]);
 
   const filteredData = useMemo(() => {
     return data.filter((row) => {
@@ -76,7 +83,7 @@ export function MetaTable({ data }: { data: ParsedMetaRow[] }) {
               <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
               <Input
                 id="search-decks"
-                placeholder="Ex: Charizard, Mewtwo..."
+                placeholder={placeholder}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pr-9 pl-9"
