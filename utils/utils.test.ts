@@ -89,6 +89,18 @@ describe("parseDeckName", () => {
     expect(parseDeckName("Mega Mewtwo Y")).toEqual(["Mega Mewtwo Y"]);
   });
 
+  test("handles Castform suffixes", () => {
+    expect(parseDeckName("Castform Sunny Form")).toEqual([
+      "Castform Sunny Form",
+    ]);
+    expect(parseDeckName("Castform Rainy Form")).toEqual([
+      "Castform Rainy Form",
+    ]);
+    expect(parseDeckName("Castform Snowy Form")).toEqual([
+      "Castform Snowy Form",
+    ]);
+  });
+
   test("handles empty or null input", () => {
     expect(parseDeckName("")).toEqual([]);
   });

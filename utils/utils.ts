@@ -62,7 +62,16 @@ export function parseDeckName(deck: string): string[] {
     "Cornerstone Mask",
   ];
 
-  const SUFFIXES = ["X", "Y", "ex"];
+  const SUFFIXES = [
+    "X",
+    "Y",
+    "ex",
+
+    // Castform forms suffixes
+    "Sunny Form",
+    "Rainy Form",
+    "Snowy Form",
+  ];
 
   const prefixPattern = `(?:(?:${PREFIXES.join("|")})\\s+)*`;
   const suffixPattern = `(?:\\s+(?:${SUFFIXES.join("|")}))*`;
