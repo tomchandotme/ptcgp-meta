@@ -57,6 +57,8 @@ const DECK_NAME_SUFFIXES = [
 
 const DECK_NAME_PATTERN_SOURCE = `(?:(?:${DECK_NAME_PREFIXES.join("|")})\\s+)*[A-Z][a-z]*(?:-[A-Z][a-z]*)*(?:\\s+(?:${DECK_NAME_SUFFIXES.join("|")}))*`;
 
+const DECK_NAME_PATTERN = new RegExp(DECK_NAME_PATTERN_SOURCE, "g");
+
 /**
  * Parses a deck name into individual Pokémon names.
  * Handles prefixes like "Mega", regional prefixes ("Alolan", "Galarian", "Hisuian", "Paldean"),
@@ -68,6 +70,8 @@ const DECK_NAME_PATTERN_SOURCE = `(?:(?:${DECK_NAME_PREFIXES.join("|")})\\s+)*[A
 export function parseDeckName(deck: string): string[] {
   if (!deck) return [];
 
-  const matches = deck.match(new RegExp(DECK_NAME_PATTERN_SOURCE, "g"));
+  // Reset lastIndex — global regex is stateful across calls
+  DECK_NAME_PATTERN.lastIndex = 0;
+  const matches = deck.match(DECK_NAME_PATTERN);
   return matches || [deck];
 }

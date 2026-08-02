@@ -7,10 +7,6 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "r2.limitlesstcg.net",
       },
-      {
-        protocol: "https",
-        hostname: "limitless3.nyc3.cdn.digitaloceanspaces.com",
-      },
     ],
   },
 };

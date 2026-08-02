@@ -1,10 +1,14 @@
 import * as cheerio from "cheerio";
 
 const META_SITE_URL = "https://play.limitlesstcg.com/decks?game=POCKET";
+const FETCH_TIMEOUT_MS = 15_000;
 
 const fetchHtml = async () => {
   try {
-    const data = await fetch(META_SITE_URL, { next: { revalidate: 3600 } });
+    const data = await fetch(META_SITE_URL, {
+      next: { revalidate: 3600 },
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    });
     if (!data.ok) {
       throw new Error(`Failed to fetch meta data: ${data.statusText}`);
     }
@@ -27,9 +31,40 @@ export interface ParsedMetaRow {
 
 type CheerioRoot = cheerio.CheerioAPI;
 
+/** Convert data-* rate attrs: fractions (0–1] → percent; values > 1 already percent. */
+const attrToPercent = (raw: string, decimals: number): number | undefined => {
+  const f = parseFloat(raw);
+  if (Number.isNaN(f)) return undefined;
+  const pct = f > 1 ? f : f * 100;
+  return +pct.toFixed(decimals);
+};
+
+const findMetaTable = ($: CheerioRoot) => {
+  const $tables = $("table").filter((_, el) => {
+    const $el = $(el);
+    const $ths = $el.find("thead th");
+    const headers = ($ths.length ? $ths : $el.find("tr").first().children("th"))
+      .map((__, th) => $(th).text().trim().toLowerCase())
+      .get();
+    return headers.some((h) => h.includes("deck"));
+  });
+  return $tables.first();
+};
+
 export const parseMeta = ($: CheerioRoot): ParsedMetaRow[] => {
-  // 1. Extract headers to use as object keys
-  const headers = $("th")
+  const $table = findMetaTable($);
+  if ($table.length === 0) {
+    console.warn("Crawler: No meta table found in HTML");
+    return [];
+  }
+
+  // 1. Extract headers to use as object keys (scoped to meta table)
+  const $headerCells = $table.find("thead th");
+  const headers = (
+    $headerCells.length
+      ? $headerCells
+      : $table.find("tr").first().children("th")
+  )
     .map((_, el) => $(el).text().trim())
     .get();
 
@@ -48,7 +83,10 @@ export const parseMeta = ($: CheerioRoot): ParsedMetaRow[] => {
   const winIdx = findIndexBy("win");
 
   // 2. Map each row into a structured object, preferring data-* attributes
-  return $("tbody tr")
+  // Cheerio may synthesize <tbody>; live Limitless HTML often omits it.
+  return $table
+    .find("tbody tr")
+    .filter((_, el) => $(el).children("td").length > 0)
     .get()
     .map((tr) => {
       const $tr = $(tr);
@@ -84,10 +122,8 @@ export const parseMeta = ($: CheerioRoot): ParsedMetaRow[] => {
       // Share: prefer tr data-share attr
       const dataShare = $tr.attr("data-share");
       if (dataShare != null) {
-        const f = parseFloat(dataShare);
-        if (!Number.isNaN(f)) {
-          out.sharePercent = +(f * 100).toFixed(4);
-        }
+        const pct = attrToPercent(dataShare, 4);
+        if (pct != null) out.sharePercent = pct;
       } else if (shareIdx >= 0) {
         const s = tds.eq(shareIdx).text().trim();
         const pct = parseFloat(String(s).replace("%", ""));
@@ -113,10 +149,8 @@ export const parseMeta = ($: CheerioRoot): ParsedMetaRow[] => {
       // Win %: prefer tr data-winrate
       const dataWin = $tr.attr("data-winrate");
       if (dataWin != null) {
-        const f = parseFloat(dataWin);
-        if (!Number.isNaN(f)) {
-          out.winPercent = +(f * 100).toFixed(2);
-        }
+        const pct = attrToPercent(dataWin, 2);
+        if (pct != null) out.winPercent = pct;
       } else if (winIdx >= 0) {
         const w = tds.eq(winIdx).text().trim();
         const pct = parseFloat(String(w).replace("%", ""));
@@ -133,15 +167,23 @@ export const parseMeta = ($: CheerioRoot): ParsedMetaRow[] => {
 export const parseCurrentSet = ($: CheerioRoot): string | undefined => {
   const normalize = (s: string) => s.trim().replace(/\s+/g, " ");
 
+  // Prefer visible option text (Limitless often omits value=; text is "B4 - Ruler…")
+  const selectedText = normalize($("select#set option:selected").text() || "");
   const rawSetVal = $("select#set").val();
-  const setName =
+  const fromVal =
     typeof rawSetVal === "string"
       ? normalize(rawSetVal)
       : Array.isArray(rawSetVal)
         ? normalize(rawSetVal.join(" "))
-        : undefined;
+        : "";
+  const setName = selectedText || fromVal || undefined;
 
-  const description = normalize($(".container.content > p").text() || "");
+  // Prefer page summary near the meta table (Limitless puts <p> before <table.meta>)
+  const description = normalize(
+    $(".container.content > p").text() ||
+      $("table.meta").prevAll("p").first().text() ||
+      "",
+  );
 
   if (setName && description) return `${setName} (${description})`;
   if (setName) return setName;
@@ -163,11 +205,6 @@ export const getPageData = async (): Promise<{
   rows: ParsedMetaRow[];
   set: string | undefined;
 }> => {
-  try {
-    const rawHtml = await fetchHtml();
-    return parsePageHtml(rawHtml);
-  } catch (error) {
-    console.error("Crawler parsing error (getPageData):", error);
-    throw error;
-  }
+  const rawHtml = await fetchHtml();
+  return parsePageHtml(rawHtml);
 };

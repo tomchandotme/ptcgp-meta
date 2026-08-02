@@ -53,9 +53,9 @@
     "lint-staged": "^17.3.0",
     "oxlint": "^1.76.0",
     "prettier": "^3.9.6",
-    "prettier-plugin-tailwindcss": "^0.7.4",
+    "prettier-plugin-tailwindcss": "^0.8.1",
     "tailwindcss": "^4.3.3",
-    "typescript": "^5"
+    "typescript": "~5.9"
   },
   "trustedDependencies": [
     "sharp",

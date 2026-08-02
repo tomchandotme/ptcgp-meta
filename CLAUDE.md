@@ -9,8 +9,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `bun lint`: Run oxlint check
 - `bun lint:fix`: Auto-fix oxlint issues where possible
 - `bun format`: Format code with Prettier
+- `bun format:check`: Check Prettier formatting
 - `bun test`: Run Bun unit tests
 - `bun typecheck`: Run TypeScript type check (`tsc --noEmit`)
+- `bun check`: Run lint + typecheck + test
 
 ## Architecture
 

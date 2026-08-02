@@ -25,7 +25,7 @@ export default async function Home() {
 
   return (
     <PageShell>
-      <PageHeader subtitle={<>Set: {currentSet}</>} />
+      <PageHeader subtitle={currentSet ? <>Set: {currentSet}</> : undefined} />
 
       <MetaTable data={data} />
 

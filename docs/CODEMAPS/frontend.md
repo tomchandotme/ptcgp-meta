@@ -5,9 +5,8 @@
 
 ## Component Hierarchy
 
-- `app/layout.tsx`: Root layout with `ThemeProvider`.
+- `app/layout.tsx`: Root layout with `ThemeProvider` and `Header` (`ThemeToggle`).
 - `app/page.tsx`: Main landing page (Server Component); calls `getPageData()`.
-  - `Header.tsx`: Navigation and `ThemeToggle`.
   - `PageChrome.tsx`: Shared `PageShell` / `PageHeader` / `PageFooter`.
   - `components/MetaTable/`: Main interactive data component (Client Component).
     - `columns.tsx` / `SortableHeader.tsx`: Column definitions.

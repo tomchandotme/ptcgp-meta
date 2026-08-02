@@ -83,12 +83,83 @@ describe("parseMeta", () => {
     const $ = cheerio.load("<table><tbody><tr><td>x</td></tr></tbody></table>");
     expect(parseMeta($)).toEqual([]);
   });
+
+  test("scopes to the meta table when other tables exist", () => {
+    const html = `
+      <table><tr><th>Other</th></tr><tbody><tr><td>noise</td></tr></tbody></table>
+      ${FIXTURE_HTML}
+    `;
+    const $ = cheerio.load(html);
+    const rows = parseMeta($);
+    expect(rows).toHaveLength(2);
+    expect(rows[0]?.deck).toBe("Miraidon ex");
+  });
+
+  test("treats data-share / data-winrate values > 1 as already percent", () => {
+    const html = `
+      <table>
+        <thead><tr><th>Deck</th><th>Share</th><th>Win %</th></tr></thead>
+        <tbody>
+          <tr data-share="12.34" data-winrate="55.6">
+            <td><a href="/decks/x">Test Deck</a></td>
+            <td>12.34%</td>
+            <td>55.6%</td>
+          </tr>
+        </tbody>
+      </table>
+    `;
+    const $ = cheerio.load(html);
+    const rows = parseMeta($);
+    expect(rows[0]?.sharePercent).toBe(12.34);
+    expect(rows[0]?.winPercent).toBe(55.6);
+  });
+
+  test("parses Limitless-style table without thead/tbody wrappers", () => {
+    const html = `
+      <table class="meta">
+        <tr><th></th><th>Deck</th><th>Count</th><th>Share</th><th>Score</th><th>Win %</th></tr>
+        <tr data-share="0.0656" data-winrate="0.4927">
+          <td>1</td>
+          <td><a href="/decks/hydreigon">Hydreigon</a></td>
+          <td>77</td>
+          <td>6.6%</td>
+          <td>200-210-0</td>
+          <td>49.3%</td>
+        </tr>
+      </table>
+    `;
+    const $ = cheerio.load(html);
+    const rows = parseMeta($);
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({
+      deck: "Hydreigon",
+      count: 77,
+      sharePercent: 6.56,
+      total: 410,
+      winPercent: 49.27,
+    });
+  });
 });
 
 describe("parseCurrentSet", () => {
-  test("combines set select value and description", () => {
+  test("prefers selected option text over value", () => {
     const $ = cheerio.load(FIXTURE_HTML);
-    expect(parseCurrentSet($)).toBe("A4a (Last 14 days · Standard format)");
+    expect(parseCurrentSet($)).toBe(
+      "Wisdom of Sea and Sky (Last 14 days · Standard format)",
+    );
+  });
+
+  test("reads option text when value attribute is omitted", () => {
+    const html = `
+      <p>12 tournaments, 1174 players</p>
+      <select id="set"><option data-set="B4" selected>B4 -  Ruler of the Skies</option></select>
+      <table class="meta"><tr><th>Deck</th></tr></table>
+    `;
+    const $ = cheerio.load(html);
+    // description via table.meta prev p
+    expect(parseCurrentSet($)).toBe(
+      "B4 - Ruler of the Skies (12 tournaments, 1174 players)",
+    );
   });
 });
 
@@ -96,6 +167,6 @@ describe("parsePageHtml", () => {
   test("returns rows and set together", () => {
     const { rows, set } = parsePageHtml(FIXTURE_HTML);
     expect(rows).toHaveLength(2);
-    expect(set).toContain("A4a");
+    expect(set).toContain("Wisdom of Sea and Sky");
   });
 });

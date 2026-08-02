@@ -26,8 +26,6 @@ import { columns } from "./columns";
 import { parseDeckName } from "@/utils/utils";
 
 export function MetaTable({ data }: { data: ParsedMetaRow[] }) {
-  "use no memo";
-
   const [sorting, setSorting] = useState<SortingState>([
     { id: "sharePercent", desc: true },
   ]);
@@ -79,7 +77,10 @@ export function MetaTable({ data }: { data: ParsedMetaRow[] }) {
               </p>
             </div>
             <div className="relative">
-              <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
+              <Search
+                aria-hidden="true"
+                className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2"
+              />
               <Input
                 id="search-decks"
                 placeholder={placeholder}
@@ -121,7 +122,9 @@ export function MetaTable({ data }: { data: ParsedMetaRow[] }) {
                 max={50}
                 step={5}
                 value={[minAppearance]}
-                onValueChange={(values) => setMinAppearance(values[0])}
+                onValueChange={(values) =>
+                  setMinAppearance(values[0] ?? minAppearance)
+                }
                 className="flex-1"
               />
               <span className="bg-muted w-10 rounded-md py-1 text-center font-mono text-sm font-bold">

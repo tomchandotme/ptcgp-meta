@@ -13,7 +13,7 @@ A modern Next.js application that tracks and analyzes Pokemon Trading Card Game 
 
 ### Prerequisites
 
-- [Bun](https://bun.sh/) (recommended) or Node.js
+- [Bun](https://bun.sh/) (required for install, scripts, and CI; `packageManager` is `bun@1.3.14`)
 
 ### Installation
 

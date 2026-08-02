@@ -13,11 +13,18 @@ export const SortableHeader = <TData, TValue>({
   title,
 }: SortableHeaderProps<TData, TValue>) => {
   const isSorted = column.getIsSorted();
+  const sortState =
+    isSorted === "asc"
+      ? "ascending"
+      : isSorted === "desc"
+        ? "descending"
+        : "none";
 
   return (
     <Button
       variant="ghost"
       size="sm"
+      aria-label={`Sort by ${title}, currently ${sortState}`}
       className={cn(
         "data-[state=open]:bg-accent -ml-3 h-8",
         isSorted && "text-foreground font-semibold",
@@ -26,11 +33,14 @@ export const SortableHeader = <TData, TValue>({
     >
       <span>{title}</span>
       {isSorted === "desc" ? (
-        <ArrowDown className="ml-2 h-3.5 w-3.5" />
+        <ArrowDown aria-hidden="true" className="ml-2 h-3.5 w-3.5" />
       ) : isSorted === "asc" ? (
-        <ArrowUp className="ml-2 h-3.5 w-3.5" />
+        <ArrowUp aria-hidden="true" className="ml-2 h-3.5 w-3.5" />
       ) : (
-        <ArrowUpDown className="ml-2 h-3.5 w-3.5 opacity-50" />
+        <ArrowUpDown
+          aria-hidden="true"
+          className="ml-2 h-3.5 w-3.5 opacity-50"
+        />
       )}
     </Button>
   );

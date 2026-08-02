@@ -14,8 +14,21 @@ export const columns: ColumnDef<ParsedMetaRow>[] = [
     cell: ({ row }) => {
       const images: string[] = row.original.pokemonImages || [];
       const deck: string = row.original.deck;
-      const deckUrl: string = row.original.deckUrl || "#";
+      const deckUrl = row.original.deckUrl;
       const pokemonNames = parseDeckName(deck);
+
+      const nameContent = pokemonNames.map((name, i) => (
+        <span
+          key={i}
+          className={`leading-none tracking-tight ${
+            i === 0
+              ? "text-foreground font-bold"
+              : "text-muted-foreground text-sm font-medium"
+          }`}
+        >
+          {name}
+        </span>
+      ));
 
       return (
         <div className="flex items-center gap-3 py-1">
@@ -33,7 +46,7 @@ export const columns: ColumnDef<ParsedMetaRow>[] = [
               >
                 <Image
                   src={src}
-                  alt=""
+                  alt={pokemonNames[i] ?? deck}
                   width={40}
                   height={40}
                   className="h-full w-full object-scale-down object-bottom"
@@ -42,25 +55,18 @@ export const columns: ColumnDef<ParsedMetaRow>[] = [
               </div>
             ))}
           </div>
-          <a
-            href={deckUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex flex-col gap-0.5"
-          >
-            {pokemonNames.map((name, i) => (
-              <span
-                key={i}
-                className={`leading-none tracking-tight ${
-                  i === 0
-                    ? "text-foreground font-bold"
-                    : "text-muted-foreground text-sm font-medium"
-                }`}
-              >
-                {name}
-              </span>
-            ))}
-          </a>
+          {deckUrl ? (
+            <a
+              href={deckUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col gap-0.5"
+            >
+              {nameContent}
+            </a>
+          ) : (
+            <div className="flex flex-col gap-0.5">{nameContent}</div>
+          )}
         </div>
       );
     },
