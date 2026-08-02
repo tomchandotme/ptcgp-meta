@@ -19,10 +19,11 @@
 
 - **UI Components**: Tailwind CSS 4, Radix UI primitives.
 - **Data Tables**: `@tanstack/react-table` for sorting and structure.
+- **URL State**: `nuqs` for shareable filter/sort query params.
 - **Icons**: `lucide-react`.
 - **Theming**: `next-themes` for dark/light/system mode (`ThemeToggle` uses `resolvedTheme`).
 
 ## State Management
 
-- **Client State**: `MetaTable` manages `sorting`, `minAppearance`, and `searchTerm` filter state using React `useState`.
-- **Server Data**: Pre-fetched in `app/page.tsx` via `getPageData()` and passed as props.
+- **URL State (`nuqs`)**: `MetaTable` syncs search (`q`), min appearances (`min`), and sort (`sort` / `dir`) via module-scoped `useQueryStates` parsers (`NuqsAdapter` in `app/layout.tsx`). Defaults are omitted from the URL.
+- **Server Data**: Pre-fetched in `app/page.tsx` via `getPageData()` and passed as props. Filtering/sorting remain client-side.

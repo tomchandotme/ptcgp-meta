@@ -1,14 +1,22 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import {
   SortingState,
+  Updater,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import { Search, X } from "lucide-react";
+import {
+  parseAsInteger,
+  parseAsString,
+  parseAsStringLiteral,
+  throttle,
+  useQueryStates,
+} from "nuqs";
 
 import {
   Table,
@@ -25,12 +33,67 @@ import { ParsedMetaRow } from "@/utils/crawler";
 import { columns } from "./columns";
 import { parseDeckName } from "@/utils/utils";
 
+const SORTABLE_COLUMNS = [
+  "count",
+  "sharePercent",
+  "total",
+  "winPercent",
+] as const;
+
+type SortableColumn = (typeof SORTABLE_COLUMNS)[number];
+
+const DEFAULT_SORT_ID: SortableColumn = "sharePercent";
+const DEFAULT_SORT_DIR = "desc" as const;
+const DEFAULT_MIN_APPEARANCE = 10;
+
+const urlReplaceThrottle = {
+  history: "replace" as const,
+  limitUrlUpdates: throttle(300),
+  clearOnDefault: true,
+};
+
+// Parsers must be module-scope so useQueryStates keeps a stable keyMap.
+const tableParsers = {
+  q: parseAsString.withDefault("").withOptions(urlReplaceThrottle),
+  min: parseAsInteger
+    .withDefault(DEFAULT_MIN_APPEARANCE)
+    .withOptions(urlReplaceThrottle),
+  sort: parseAsStringLiteral(SORTABLE_COLUMNS)
+    .withDefault(DEFAULT_SORT_ID)
+    .withOptions({ clearOnDefault: true, history: "replace" }),
+  dir: parseAsStringLiteral(["asc", "desc"] as const)
+    .withDefault(DEFAULT_SORT_DIR)
+    .withOptions({ clearOnDefault: true, history: "replace" }),
+};
+
+function isSortableColumn(id: string): id is SortableColumn {
+  return (SORTABLE_COLUMNS as readonly string[]).includes(id);
+}
+
 export function MetaTable({ data }: { data: ParsedMetaRow[] }) {
-  const [sorting, setSorting] = useState<SortingState>([
-    { id: "sharePercent", desc: true },
-  ]);
-  const [minAppearance, setMinAppearance] = useState(10);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [filters, setFilters] = useQueryStates(tableParsers);
+  const { q: searchTerm, min: minAppearance, sort, dir } = filters;
+
+  const sorting = useMemo<SortingState>(
+    () => [{ id: sort, desc: dir === "desc" }],
+    [sort, dir],
+  );
+
+  const setSorting = (updater: Updater<SortingState>) => {
+    const next = typeof updater === "function" ? updater(sorting) : updater;
+    const first = next[0];
+    if (!first || !isSortableColumn(first.id)) {
+      void setFilters({
+        sort: DEFAULT_SORT_ID,
+        dir: DEFAULT_SORT_DIR,
+      });
+      return;
+    }
+    void setFilters({
+      sort: first.id,
+      dir: first.desc ? "desc" : "asc",
+    });
+  };
 
   const placeholder = useMemo(() => {
     const topPokemons = data.slice(0, 2).map((v) => parseDeckName(v.deck)[0]);
@@ -85,7 +148,7 @@ export function MetaTable({ data }: { data: ParsedMetaRow[] }) {
                 id="search-decks"
                 placeholder={placeholder}
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e) => void setFilters({ q: e.target.value })}
                 className="pr-9 pl-9"
               />
               {searchTerm && (
@@ -94,7 +157,7 @@ export function MetaTable({ data }: { data: ParsedMetaRow[] }) {
                   size="icon"
                   aria-label="Clear search"
                   className="absolute top-1/2 right-1 h-7 w-7 -translate-y-1/2 hover:bg-transparent"
-                  onClick={() => setSearchTerm("")}
+                  onClick={() => void setFilters({ q: "" })}
                 >
                   <X className="text-muted-foreground h-4 w-4" />
                 </Button>
@@ -123,7 +186,9 @@ export function MetaTable({ data }: { data: ParsedMetaRow[] }) {
                 step={5}
                 value={[minAppearance]}
                 onValueChange={(values) =>
-                  setMinAppearance(values[0] ?? minAppearance)
+                  void setFilters({
+                    min: values[0] ?? minAppearance,
+                  })
                 }
                 className="flex-1"
               />

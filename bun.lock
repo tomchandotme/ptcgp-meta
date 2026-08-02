@@ -14,6 +14,7 @@
         "lucide-react": "^1.28.0",
         "next": "16.2.12",
         "next-themes": "^0.4.6",
+        "nuqs": "^2.9.4",
         "react": "19.2.8",
         "react-dom": "19.2.8",
         "tailwind-merge": "^3.6.0",
@@ -186,6 +187,8 @@
 
     "@radix-ui/react-use-size": ["@radix-ui/react-use-size@1.1.4", "", { "dependencies": { "@radix-ui/react-use-layout-effect": "1.1.4" }, "peerDependencies": { "@types/react": "*", "react": "^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc" }, "optionalPeers": ["@types/react"] }, "sha512-D3anSY15EJoxrihpsXI6SMrmmonnQtR2ni7arO+Lfdg3O95b9hNXxONk8jA5C8ANdF/h5HMAxejgs8PWJ6rlhw=="],
 
+    "@standard-schema/spec": ["@standard-schema/spec@1.1.0", "", {}, "sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w=="],
+
     "@swc/helpers": ["@swc/helpers@0.5.15", "", { "dependencies": { "tslib": "^2.8.0" } }, "sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g=="],
 
     "@tailwindcss/node": ["@tailwindcss/node@4.3.3", "", { "dependencies": { "@jridgewell/remapping": "^2.3.5", "enhanced-resolve": "^5.24.1", "jiti": "^2.7.0", "lightningcss": "1.32.0", "magic-string": "^0.30.21", "source-map-js": "^1.2.1", "tailwindcss": "4.3.3" } }, "sha512-/T8IKEsf9VTU6tLjgC7+sv2mOPtQxzE2jMw7u4Tt40Tx+QSZxpzh95/H6cMKoja9XuW7iMdLJYBB0o9G1CaAgg=="],
@@ -317,6 +320,8 @@
     "next-themes": ["next-themes@0.4.6", "", { "peerDependencies": { "react": "^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc", "react-dom": "^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc" } }, "sha512-pZvgD5L0IEvX5/9GWyHMf3m8BKiVQwsCMHfoFosXtXBMnaS0ZnIJ9ST4b4NqLVKDEm8QBxoNNGNaBv2JNF6XNA=="],
 
     "nth-check": ["nth-check@2.1.1", "", { "dependencies": { "boolbase": "^1.0.0" } }, "sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w=="],
+
+    "nuqs": ["nuqs@2.9.4", "", { "dependencies": { "@standard-schema/spec": "1.1.0" }, "peerDependencies": { "@remix-run/react": ">=2", "@tanstack/react-router": "^1", "next": ">=14.2.0", "react": ">=18.2.0 || ^19.0.0-0", "react-router": "^5 || ^6 || ^7 || ^8", "react-router-dom": "^5 || ^6 || ^7" }, "optionalPeers": ["@remix-run/react", "@tanstack/react-router", "next", "react-router", "react-router-dom"] }, "sha512-lsz3NyCOKmuNAyW052i9RWqcTntoYb2Qm6FxSWnkTDwOJnGS6fzpXDAp0VcwTevw3xgnWebYpDr9rm6+o4DHbw=="],
 
     "oxlint": ["oxlint@1.76.0", "", { "optionalDependencies": { "@oxlint/binding-android-arm-eabi": "1.76.0", "@oxlint/binding-android-arm64": "1.76.0", "@oxlint/binding-darwin-arm64": "1.76.0", "@oxlint/binding-darwin-x64": "1.76.0", "@oxlint/binding-freebsd-x64": "1.76.0", "@oxlint/binding-linux-arm-gnueabihf": "1.76.0", "@oxlint/binding-linux-arm-musleabihf": "1.76.0", "@oxlint/binding-linux-arm64-gnu": "1.76.0", "@oxlint/binding-linux-arm64-musl": "1.76.0", "@oxlint/binding-linux-ppc64-gnu": "1.76.0", "@oxlint/binding-linux-riscv64-gnu": "1.76.0", "@oxlint/binding-linux-riscv64-musl": "1.76.0", "@oxlint/binding-linux-s390x-gnu": "1.76.0", "@oxlint/binding-linux-x64-gnu": "1.76.0", "@oxlint/binding-linux-x64-musl": "1.76.0", "@oxlint/binding-openharmony-arm64": "1.76.0", "@oxlint/binding-win32-arm64-msvc": "1.76.0", "@oxlint/binding-win32-ia32-msvc": "1.76.0", "@oxlint/binding-win32-x64-msvc": "1.76.0" }, "peerDependencies": { "oxlint-tsgolint": ">=7.0.2001", "vite-plus": "*" }, "optionalPeers": ["oxlint-tsgolint", "vite-plus"], "bin": { "oxlint": "bin/oxlint" } }, "sha512-6QoFioEU4fNdiUx/2Eo6TRd6NG7H7njnRCz8rhB66cZmMHDTqcm1Rjvl8Wry+ZTQMBAmyb4Mlf62Mk5X+eHSOw=="],
 
