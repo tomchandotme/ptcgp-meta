@@ -108,23 +108,24 @@ describe("parseDeckName", () => {
 
 describe("getWinRateColor", () => {
   test("returns S-tier at 55 and above", () => {
-    expect(getWinRateColor(55)).toContain("indigo");
-    expect(getWinRateColor(60)).toContain("indigo");
+    expect(getWinRateColor(55)).toContain("emerald");
+    expect(getWinRateColor(60)).toContain("emerald");
   });
 
-  test("returns Tier 1 between 52.5 and 55", () => {
-    expect(getWinRateColor(52.5)).toContain("emerald");
-    expect(getWinRateColor(54.9)).toContain("emerald");
+  test("returns Tier 1 between 51 and 55", () => {
+    expect(getWinRateColor(51)).toContain("teal");
+    expect(getWinRateColor(54.9)).toContain("teal");
   });
 
-  test("returns Tier 2 between 50 and 52.5", () => {
-    expect(getWinRateColor(50)).toContain("blue");
-    expect(getWinRateColor(52.4)).toContain("blue");
+  test("returns Tier 2 between 49 and 51", () => {
+    expect(getWinRateColor(49)).toContain("slate");
+    expect(getWinRateColor(50)).toContain("slate");
+    expect(getWinRateColor(50.9)).toContain("slate");
   });
 
-  test("returns Tier 3 between 47.5 and 50", () => {
-    expect(getWinRateColor(47.5)).toContain("orange");
-    expect(getWinRateColor(49.9)).toContain("orange");
+  test("returns Tier 3 between 47.5 and 49", () => {
+    expect(getWinRateColor(47.5)).toContain("amber");
+    expect(getWinRateColor(48.9)).toContain("amber");
   });
 
   test("returns Tier 4 below 47.5", () => {

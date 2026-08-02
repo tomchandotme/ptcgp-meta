@@ -8,11 +8,11 @@ export function cn(...inputs: ClassValue[]) {
 /**
  * Returns Tailwind CSS classes for win rate badges based on performance tiers.
  *
- * Tiers:
- * - S-Tier (>= 55%): Indigo
- * - Tier 1 (52.5% - 55%): Emerald
- * - Tier 2 (50% - 52.5%): Blue
- * - Tier 3 (47.5% - 50%): Orange
+ * Sequential emerald → rose heat scale; [49, 51) is a neutral band around 50%:
+ * - S-Tier (>= 55%): Emerald
+ * - Tier 1 (51% - 55%): Teal
+ * - Tier 2 (49% - 51%): Slate
+ * - Tier 3 (47.5% - 49%): Amber
  * - Tier 4 (< 47.5%): Rose
  *
  * @param winRate - The win rate percentage
@@ -20,16 +20,16 @@ export function cn(...inputs: ClassValue[]) {
  */
 export function getWinRateColor(winRate: number): string {
   if (winRate >= 55) {
-    return "border-indigo-500/50 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400";
-  }
-  if (winRate >= 52.5) {
     return "border-emerald-500/50 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400";
   }
-  if (winRate >= 50) {
-    return "border-blue-500/50 bg-blue-500/10 text-blue-600 dark:text-blue-400";
+  if (winRate >= 51) {
+    return "border-teal-500/50 bg-teal-500/10 text-teal-600 dark:text-teal-400";
+  }
+  if (winRate >= 49) {
+    return "border-slate-500/50 bg-slate-500/10 text-slate-600 dark:text-slate-400";
   }
   if (winRate >= 47.5) {
-    return "border-orange-500/50 bg-orange-500/10 text-orange-600 dark:text-orange-400";
+    return "border-amber-500/50 bg-amber-500/10 text-amber-600 dark:text-amber-400";
   }
   return "border-rose-500/50 bg-rose-500/10 text-rose-600 dark:text-rose-400";
 }
