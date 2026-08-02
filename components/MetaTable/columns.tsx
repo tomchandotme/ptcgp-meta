@@ -1,6 +1,6 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
+import Image from "next/image";
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { ParsedMetaRow } from "@/utils/crawler";
@@ -26,15 +26,18 @@ export const columns: ColumnDef<ParsedMetaRow>[] = [
                 className={cn(
                   "relative size-10 overflow-hidden drop-shadow transition-transform hover:z-10 hover:scale-110",
                   {
-                    "-mr-4 mb-4": images.length === 2 && i == 0,
-                    "mt-4": images.length === 2 && i == 1,
+                    "-mr-4 mb-4": images.length === 2 && i === 0,
+                    "mt-4": images.length === 2 && i === 1,
                   },
                 )}
               >
-                <img
+                <Image
                   src={src}
                   alt=""
+                  width={40}
+                  height={40}
                   className="h-full w-full object-scale-down object-bottom"
+                  unoptimized
                 />
               </div>
             ))}
@@ -97,7 +100,7 @@ export const columns: ColumnDef<ParsedMetaRow>[] = [
       const val = row.getValue("total");
       return (
         <div className="text-center font-mono font-medium">
-          {typeof val === "number" ? val : 0}
+          {typeof val === "number" ? val : "-"}
         </div>
       );
     },

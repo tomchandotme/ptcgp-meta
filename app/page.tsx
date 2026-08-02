@@ -1,18 +1,14 @@
 import { getPageData } from "@/utils/crawler";
 import { MetaTable } from "@/components/MetaTable";
+import { PageFooter, PageHeader, PageShell } from "@/components/PageChrome";
 
 export default async function Home() {
   const { rows: data, set: currentSet } = await getPageData();
 
   if (!data || data.length === 0) {
     return (
-      <main className="container mx-auto max-w-5xl px-4 py-8">
-        <div className="mb-10">
-          <h1 className="text-3xl font-bold tracking-tight">PTCGP Meta</h1>
-          <p className="text-muted-foreground mt-1">
-            Competitive deck statistics scraped from Limitless TCG.
-          </p>
-        </div>
+      <PageShell>
+        <PageHeader />
 
         <div className="flex min-h-100 flex-col items-center justify-center rounded-xl border border-dashed text-center">
           <h2 className="text-xl font-semibold">No data available</h2>
@@ -22,30 +18,18 @@ export default async function Home() {
           </p>
         </div>
 
-        <footer className="text-muted-foreground mt-20 flex items-center justify-between border-t pt-8 pb-12 text-xs">
-          <p>© {new Date().getFullYear()} PTCGP Meta</p>
-          <p>Data provided by play.limitlesstcg.com</p>
-        </footer>
-      </main>
+        <PageFooter />
+      </PageShell>
     );
   }
 
   return (
-    <main className="container mx-auto max-w-5xl px-4 py-8">
-      <div className="mb-10">
-        <h1 className="text-3xl font-bold tracking-tight">PTCGP Meta</h1>
-        <p className="text-muted-foreground mt-1">
-          Competitive deck statistics scraped from Limitless TCG. <br />
-          Set: {currentSet}
-        </p>
-      </div>
+    <PageShell>
+      <PageHeader subtitle={<>Set: {currentSet}</>} />
 
       <MetaTable data={data} />
 
-      <footer className="text-muted-foreground mt-20 flex items-center justify-between border-t pt-8 pb-12 text-xs">
-        <p>© {new Date().getFullYear()} PTCGP Meta</p>
-        <p>Data provided by play.limitlesstcg.com</p>
-      </footer>
-    </main>
+      <PageFooter />
+    </PageShell>
   );
 }

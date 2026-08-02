@@ -50,7 +50,6 @@ export function MetaTable({ data }: { data: ParsedMetaRow[] }) {
     });
   }, [data, minAppearance, searchTerm]);
 
-  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: filteredData,
     columns,
@@ -92,6 +91,7 @@ export function MetaTable({ data }: { data: ParsedMetaRow[] }) {
                 <Button
                   variant="ghost"
                   size="icon"
+                  aria-label="Clear search"
                   className="absolute top-1/2 right-1 h-7 w-7 -translate-y-1/2 hover:bg-transparent"
                   onClick={() => setSearchTerm("")}
                 >
@@ -138,8 +138,22 @@ export function MetaTable({ data }: { data: ParsedMetaRow[] }) {
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="hover:bg-transparent">
                 {headerGroup.headers.map((header) => {
+                  const sorted = header.column.getIsSorted();
+                  const ariaSort =
+                    sorted === "asc"
+                      ? "ascending"
+                      : sorted === "desc"
+                        ? "descending"
+                        : header.column.getCanSort()
+                          ? "none"
+                          : undefined;
+
                   return (
-                    <TableHead key={header.id} className="h-10 py-2">
+                    <TableHead
+                      key={header.id}
+                      className="h-10 py-2"
+                      aria-sort={ariaSort}
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -155,11 +169,7 @@ export function MetaTable({ data }: { data: ParsedMetaRow[] }) {
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  className="group"
-                >
+                <TableRow key={row.id} className="group">
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="py-3">
                       {flexRender(

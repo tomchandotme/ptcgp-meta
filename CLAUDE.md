@@ -24,7 +24,9 @@ This is a Next.js (App Router) project focused on tracking Pokémon Trading Card
 - **Documentation**:
   - Detailed codemaps are located in `docs/CODEMAPS/`.
 - **Key Files**:
-  - `utils/crawler.ts`: Scraper implementation for the Limitless TCG meta site.
-  - `app/page.tsx`: Main page entry point.
-  - `components/MetaTable/`: Interactive data table (index, columns, SortableHeader).
-  - `.oxlintrc.json`: Oxlint configuration (primary linter).
+- `utils/crawler.ts`: Scraper implementation for the Limitless TCG meta site (`getPageData`, 1h revalidate; throws on failure).
+- `app/page.tsx`: Main page entry point.
+- `components/PageChrome.tsx`: Shared page shell/header/footer.
+- `components/MetaTable/`: Interactive data table (index, columns, SortableHeader).
+- `.oxlintrc.json`: Oxlint configuration (primary linter).
+- `.github/workflows/ci.yml`: CI for lint, typecheck, and tests.

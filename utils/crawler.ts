@@ -16,25 +16,18 @@ const fetchHtml = async () => {
 };
 
 export interface ParsedMetaRow {
-  position?: number;
   deck: string;
   deckUrl?: string;
   pokemonImages?: string[];
   count?: number;
-  share?: number; // fraction 0..1
   sharePercent?: number; // 0..100
-  score?: { wins: number; losses: number; ties: number };
   total?: number;
-  calculatedWinPercent?: number; // 0..100
-  calculatedWin?: number; // fraction 0..1
-  win?: number; // fraction 0..1
   winPercent?: number; // 0..100
-  matchupsUrl?: string;
 }
 
 type CheerioRoot = cheerio.CheerioAPI;
 
-const parseMeta = ($: CheerioRoot): ParsedMetaRow[] => {
+export const parseMeta = ($: CheerioRoot): ParsedMetaRow[] => {
   // 1. Extract headers to use as object keys
   const headers = $("th")
     .map((_, el) => $(el).text().trim())
@@ -63,16 +56,12 @@ const parseMeta = ($: CheerioRoot): ParsedMetaRow[] => {
 
       const out: ParsedMetaRow = { deck: "" };
 
-      // Position (rank)
-      const posText = tds.eq(0).text().trim();
-      const posN = parseInt(posText, 10);
-      if (!Number.isNaN(posN)) out.position = posN;
-
       // Pokemon images
       const imgs = tds
         .find("img")
         .map((_, img) => $(img).attr("src") || "")
-        .get();
+        .get()
+        .filter(Boolean);
       if (imgs.length) out.pokemonImages = imgs;
 
       // Deck name + url
@@ -97,7 +86,6 @@ const parseMeta = ($: CheerioRoot): ParsedMetaRow[] => {
       if (dataShare != null) {
         const f = parseFloat(dataShare);
         if (!Number.isNaN(f)) {
-          out.share = f;
           out.sharePercent = +(f * 100).toFixed(4);
         }
       } else if (shareIdx >= 0) {
@@ -105,11 +93,10 @@ const parseMeta = ($: CheerioRoot): ParsedMetaRow[] => {
         const pct = parseFloat(String(s).replace("%", ""));
         if (!Number.isNaN(pct)) {
           out.sharePercent = pct;
-          out.share = pct / 100;
         }
       }
 
-      // Score + matchups URL
+      // Score cell: derive total matches only (wins + losses + ties)
       if (scoreIdx >= 0) {
         const $scoreCell = tds.eq(scoreIdx);
         const $scoreA = $scoreCell.find("a");
@@ -119,14 +106,8 @@ const parseMeta = ($: CheerioRoot): ParsedMetaRow[] => {
           const wins = parseInt(parts[0] ?? "0", 10) || 0;
           const losses = parseInt(parts[1] ?? "0", 10) || 0;
           const ties = parseInt(parts[2] ?? "0", 10) || 0;
-          out.score = { wins, losses, ties };
           out.total = wins + losses + ties;
-          out.calculatedWinPercent =
-            out.total > 0 ? +((wins / out.total) * 100).toFixed(2) : undefined;
-          out.calculatedWin = out.total > 0 ? +(wins / out.total) : undefined;
         }
-        const href = $scoreCell.find("a").attr("href");
-        if (href) out.matchupsUrl = new URL(href, META_SITE_URL).toString();
       }
 
       // Win %: prefer tr data-winrate
@@ -134,7 +115,6 @@ const parseMeta = ($: CheerioRoot): ParsedMetaRow[] => {
       if (dataWin != null) {
         const f = parseFloat(dataWin);
         if (!Number.isNaN(f)) {
-          out.win = f;
           out.winPercent = +(f * 100).toFixed(2);
         }
       } else if (winIdx >= 0) {
@@ -142,7 +122,6 @@ const parseMeta = ($: CheerioRoot): ParsedMetaRow[] => {
         const pct = parseFloat(String(w).replace("%", ""));
         if (!Number.isNaN(pct)) {
           out.winPercent = pct;
-          out.win = pct / 100;
         }
       }
 
@@ -151,7 +130,7 @@ const parseMeta = ($: CheerioRoot): ParsedMetaRow[] => {
     .filter((o) => o.deck && o.deck.length);
 };
 
-const parseCurrentSet = ($: CheerioRoot): string | undefined => {
+export const parseCurrentSet = ($: CheerioRoot): string | undefined => {
   const normalize = (s: string) => s.trim().replace(/\s+/g, " ");
 
   const rawSetVal = $("select#set").val();
@@ -170,29 +149,25 @@ const parseCurrentSet = ($: CheerioRoot): string | undefined => {
   return undefined;
 };
 
+export const parsePageHtml = (
+  html: string,
+): { rows: ParsedMetaRow[]; set: string | undefined } => {
+  const $ = cheerio.load(html);
+  return {
+    rows: parseMeta($),
+    set: parseCurrentSet($),
+  };
+};
+
 export const getPageData = async (): Promise<{
   rows: ParsedMetaRow[];
   set: string | undefined;
 }> => {
   try {
     const rawHtml = await fetchHtml();
-    const $ = cheerio.load(rawHtml);
-    return {
-      rows: parseMeta($),
-      set: parseCurrentSet($),
-    };
+    return parsePageHtml(rawHtml);
   } catch (error) {
     console.error("Crawler parsing error (getPageData):", error);
-    return { rows: [], set: undefined };
+    throw error;
   }
-};
-
-export const getMeta = async (): Promise<ParsedMetaRow[]> => {
-  const { rows } = await getPageData();
-  return rows;
-};
-
-export const getCurrentSet = async (): Promise<string | undefined> => {
-  const { set } = await getPageData();
-  return set;
 };

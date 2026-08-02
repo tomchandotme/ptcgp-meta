@@ -34,12 +34,14 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ### Scripts
 
 ```bash
-bun lint        # oxlint
-bun format      # Prettier
-bun test        # Bun unit tests
-bun typecheck   # tsc --noEmit
-bun run build   # production build
-bun start       # production server
+bun lint          # oxlint
+bun format        # Prettier write
+bun format:check  # Prettier check
+bun test          # Bun unit tests
+bun typecheck     # tsc --noEmit
+bun check         # lint + typecheck + test
+bun run build     # production build
+bun start         # production server
 ```
 
 ## Architecture
@@ -65,4 +67,4 @@ Detailed architecture maps can be found in [docs/CODEMAPS/](docs/CODEMAPS/archit
 
 ## License
 
-Private / MIT (Check LICENSE file if available)
+Private project. No public license is provided.

@@ -7,16 +7,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { PageHeader, PageShell } from "@/components/PageChrome";
 
 export default function Loading() {
   return (
-    <main className="container mx-auto max-w-5xl px-4 py-8">
-      <div className="mb-10">
-        <h1 className="text-3xl font-bold tracking-tight">PTCGP Meta</h1>
-        <p className="text-muted-foreground mt-1">
-          Competitive deck statistics scraped from Limitless TCG.
-        </p>
-      </div>
+    <PageShell>
+      <PageHeader />
 
       <div className="w-full space-y-6">
         <div className="bg-card flex flex-col items-start justify-between gap-4 rounded-lg border p-4 sm:flex-row sm:items-center">
@@ -65,6 +61,6 @@ export default function Loading() {
           </Table>
         </div>
       </div>
-    </main>
+    </PageShell>
   );
 }

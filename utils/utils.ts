@@ -34,6 +34,29 @@ export function getWinRateColor(winRate: number): string {
   return "border-rose-500/50 bg-rose-500/10 text-rose-600 dark:text-rose-400";
 }
 
+const DECK_NAME_PREFIXES = [
+  "Mega",
+  "Alolan",
+  "Galarian",
+  "Hisuian",
+  "Paldean",
+  "Teal Mask",
+  "Wellspring Mask",
+  "Hearthflame Mask",
+  "Cornerstone Mask",
+];
+
+const DECK_NAME_SUFFIXES = [
+  "X",
+  "Y",
+  "ex",
+  "Sunny Form",
+  "Rainy Form",
+  "Snowy Form",
+];
+
+const DECK_NAME_PATTERN_SOURCE = `(?:(?:${DECK_NAME_PREFIXES.join("|")})\\s+)*[A-Z][a-z]*(?:-[A-Z][a-z]*)*(?:\\s+(?:${DECK_NAME_SUFFIXES.join("|")}))*`;
+
 /**
  * Parses a deck name into individual Pokémon names.
  * Handles prefixes like "Mega", regional prefixes ("Alolan", "Galarian", "Hisuian", "Paldean"),
@@ -45,42 +68,6 @@ export function getWinRateColor(winRate: number): string {
 export function parseDeckName(deck: string): string[] {
   if (!deck) return [];
 
-  const PREFIXES = [
-    // Mega
-    "Mega",
-
-    // regional prefixes
-    "Alolan",
-    "Galarian",
-    "Hisuian",
-    "Paldean",
-
-    // Ogerpon masks prefixes
-    "Teal Mask",
-    "Wellspring Mask",
-    "Hearthflame Mask",
-    "Cornerstone Mask",
-  ];
-
-  const SUFFIXES = [
-    "X",
-    "Y",
-    "ex",
-
-    // Castform forms suffixes
-    "Sunny Form",
-    "Rainy Form",
-    "Snowy Form",
-  ];
-
-  const prefixPattern = `(?:(?:${PREFIXES.join("|")})\\s+)*`;
-  const suffixPattern = `(?:\\s+(?:${SUFFIXES.join("|")}))*`;
-
-  const pokemonPattern = new RegExp(
-    `${prefixPattern}[A-Z][a-z]*(?:-[A-Z][a-z]*)*${suffixPattern}`,
-    "g",
-  );
-
-  const matches = deck.match(pokemonPattern);
+  const matches = deck.match(new RegExp(DECK_NAME_PATTERN_SOURCE, "g"));
   return matches || [deck];
 }
