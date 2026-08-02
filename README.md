@@ -5,7 +5,7 @@ A modern Next.js application that tracks and analyzes Pokemon Trading Card Game 
 ## Features
 
 - **Real-time Scraping**: Fetches the latest deck statistics from Limitless TCG.
-- **Interactive Data Table**: Sort, filter, and analyze meta percentages and win rates.
+- **Interactive Data Table**: Sort, search, filter, and analyze meta percentages and win rates.
 - **Modern Stack**: Built with Next.js 16, React 19, and Tailwind CSS 4.
 - **Fast Performance**: Optimized for the Bun runtime with server-side data fetching.
 
@@ -31,23 +31,25 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-### Production
+### Scripts
 
 ```bash
-# Build the application
-bun run build
-
-# Start the production server
-bun start
+bun lint        # oxlint
+bun format      # Prettier
+bun test        # Bun unit tests
+bun typecheck   # tsc --noEmit
+bun run build   # production build
+bun start       # production server
 ```
 
 ## Architecture
 
 This project follows the Next.js App Router architecture with a focus on server-side data extraction.
 
-- **Frontend**: React 19 Client Components for interactivity (sorting/filtering).
-- **Data Fetching**: Server Components perform HTML scraping using `cheerio`.
+- **Frontend**: React 19 Client Components for interactivity (sorting/search/filtering).
+- **Data Fetching**: Server Components perform HTML scraping using `cheerio` (`getPageData()`, 1h revalidate).
 - **UI System**: Tailwind CSS 4 with Radix UI primitives and Lucide icons.
+- **Linting**: oxlint (not ESLint).
 
 Detailed architecture maps can be found in [docs/CODEMAPS/](docs/CODEMAPS/architecture.md):
 
@@ -59,7 +61,7 @@ Detailed architecture maps can be found in [docs/CODEMAPS/](docs/CODEMAPS/archit
 ## Documentation
 
 - `utils/crawler.ts`: Core scraper logic for Limitless TCG.
-- `components/MetaTable.tsx`: Interactive dashboard for meta data.
+- `components/MetaTable/`: Interactive dashboard for meta data.
 
 ## License
 

@@ -1,6 +1,6 @@
 # Data Codemap
 
-**Last Updated:** 2026-02-02
+**Last Updated:** 2026-08-02
 
 ## Data Models
 
@@ -17,11 +17,14 @@ Defined in `utils/crawler.ts`, this interface represents a single deck's meta st
 | `count`         | `number`    | Total number of recorded games/entries.         |
 | `sharePercent`  | `number`    | Percentage of the meta (0-100).                 |
 | `winPercent`    | `number`    | Win rate percentage (0-100).                    |
+| `total`         | `number`    | Total matches (wins + losses + ties).           |
 | `score`         | `interface` | Object containing `wins`, `losses`, and `ties`. |
 | `matchupsUrl`   | `string`    | Link to detailed matchups.                      |
+
+`getPageData()` also returns `set: string | undefined` — the current Limitless set label (from `select#set` + description).
 
 ## External Data Source
 
 - **Source**: `play.limitlesstcg.com`
 - **Format**: HTML (Scraped)
-- **Caching**: Next.js `force-cache` is used on the initial HTML fetch.
+- **Caching**: Next.js fetch with `revalidate: 3600` (1 hour).

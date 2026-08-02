@@ -1,6 +1,6 @@
 # Architecture Codemap
 
-**Last Updated:** 2026-02-02
+**Last Updated:** 2026-08-02
 **Key Entry Point:** `app/page.tsx`
 
 ## Overview
@@ -18,16 +18,17 @@ User -> [Frontend (Next.js/React)] -> [Crawler (cheerio/fetch)] -> [Limitless TC
 - **Frontend**: Next.js App Router, Tailwind CSS 4, Radix UI, TanStack Table.
 - **Backend/Logic**: Server-side crawling using `cheerio` to parse live meta data.
 - **Deployment**: Next.js production build.
+- **Linting**: oxlint + Prettier (husky / lint-staged).
 
 ## Key Files
 
 - `app/page.tsx`: Server Component entry point.
-- `utils/crawler.ts`: Core data extraction logic.
-- `components/MetaTable.tsx`: Client-side interactive data table.
+- `utils/crawler.ts`: Core data extraction logic (`getPageData`).
+- `components/MetaTable/`: Client-side interactive data table (index, columns, SortableHeader).
 
 ## Data Flow
 
 1. User requests `/`.
-2. `app/page.tsx` (Server Component) calls `getMeta()` from `utils/crawler.ts`.
-3. `crawler.ts` fetches HTML from Limitless TCG and parses it into structured `ParsedMetaRow` objects.
-4. Data is passed to `MetaTable.tsx` for rendering and client-side filtering/sorting.
+2. `app/page.tsx` (Server Component) calls `getPageData()` from `utils/crawler.ts`.
+3. `crawler.ts` fetches HTML once from Limitless TCG (`revalidate: 3600`) and parses both meta rows and the current set label.
+4. Data is passed to `components/MetaTable/` for rendering and client-side search/filtering/sorting.

@@ -1,13 +1,8 @@
-import { getCurrentSet, getMeta, type ParsedMetaRow } from "@/utils/crawler";
+import { getPageData } from "@/utils/crawler";
 import { MetaTable } from "@/components/MetaTable";
 
 export default async function Home() {
-  const requests = [getMeta(), getCurrentSet()];
-
-  const [data, currentSet] = (await Promise.all(requests)) as [
-    ParsedMetaRow[],
-    string | undefined,
-  ];
+  const { rows: data, set: currentSet } = await getPageData();
 
   if (!data || data.length === 0) {
     return (

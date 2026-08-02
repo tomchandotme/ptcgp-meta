@@ -39,7 +39,12 @@ export const columns: ColumnDef<ParsedMetaRow>[] = [
               </div>
             ))}
           </div>
-          <a href={deckUrl} target="_blank" className="flex flex-col gap-0.5">
+          <a
+            href={deckUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex flex-col gap-0.5"
+          >
             {pokemonNames.map((name, i) => (
               <span
                 key={i}
