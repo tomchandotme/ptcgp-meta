@@ -31,8 +31,8 @@ export const columns: ColumnDef<ParsedMetaRow>[] = [
       ));
 
       return (
-        <div className="flex items-center gap-3 py-1">
-          <div className="flex min-w-16 -space-x-3">
+        <div className="flex min-w-0 items-center gap-3 py-1">
+          <div className="flex shrink-0 -space-x-3">
             {images.map((src, i) => (
               <div
                 key={i}

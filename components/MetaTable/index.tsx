@@ -31,7 +31,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ParsedMetaRow } from "@/utils/crawler";
 import { columns } from "./columns";
-import { parseDeckName } from "@/utils/utils";
+import { cn, parseDeckName } from "@/utils/utils";
 
 const SORTABLE_COLUMNS = [
   "count",
@@ -200,9 +200,10 @@ export function MetaTable({ data }: { data: ParsedMetaRow[] }) {
         </div>
       </div>
 
-      <div className="bg-card relative max-h-200 overflow-auto rounded-xl border shadow-sm">
-        <Table>
-          <TableHeader className="bg-muted/50 sticky top-0 z-10 shadow-sm">
+      {/* max-md: contain x-scroll in card (body must not pan sideways). md+: sticky ok. */}
+      <div className="bg-card relative w-full max-w-full rounded-xl border shadow-sm max-md:overflow-x-auto max-md:overscroll-x-contain">
+        <Table className="min-w-[42rem]">
+          <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="hover:bg-transparent">
                 {headerGroup.headers.map((header) => {
@@ -215,11 +216,15 @@ export function MetaTable({ data }: { data: ParsedMetaRow[] }) {
                         : header.column.getCanSort()
                           ? "none"
                           : undefined;
+                  const isDeck = header.column.id === "deck";
 
                   return (
                     <TableHead
                       key={header.id}
-                      className="h-10 py-2"
+                      className={cn(
+                        "bg-muted/95 h-10 py-2 backdrop-blur-sm md:sticky md:top-16 md:z-10",
+                        isDeck && "min-w-48",
+                      )}
                       aria-sort={ariaSort}
                     >
                       {header.isPlaceholder
@@ -239,7 +244,13 @@ export function MetaTable({ data }: { data: ParsedMetaRow[] }) {
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id} className="group">
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="py-3">
+                    <TableCell
+                      key={cell.id}
+                      className={cn(
+                        "py-3",
+                        cell.column.id === "deck" && "min-w-48",
+                      )}
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
