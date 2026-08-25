@@ -1,6 +1,8 @@
+import Link from "next/link";
 import { getPageData } from "@/utils/crawler";
 import { MetaTable } from "@/components/MetaTable";
 import { PageFooter, PageHeader, PageShell } from "@/components/PageChrome";
+import { Button } from "@/components/ui/button";
 
 export default async function Home() {
   const { rows: data, set: currentSet } = await getPageData();
@@ -10,12 +12,16 @@ export default async function Home() {
       <PageShell>
         <PageHeader />
 
-        <div className="flex min-h-100 flex-col items-center justify-center rounded-xl border border-dashed text-center">
-          <h2 className="text-xl font-semibold">No data available</h2>
+        <div className="flex min-h-100 flex-col items-center justify-center rounded-lg border border-dashed text-center">
+          <h2 className="font-display text-2xl font-semibold tracking-tight">
+            No decks to show
+          </h2>
           <p className="text-muted-foreground mt-2 max-w-sm">
-            We couldn&apos;t retrieve meta data at this time. This might be due
-            to a temporary issue with the upstream provider.
+            Limitless did not return a meta table. Refresh to try again.
           </p>
+          <Button asChild className="mt-6">
+            <Link href="/">Refresh</Link>
+          </Button>
         </div>
 
         <PageFooter />
@@ -25,7 +31,7 @@ export default async function Home() {
 
   return (
     <PageShell>
-      <PageHeader subtitle={currentSet ? <>Set: {currentSet}</> : undefined} />
+      <PageHeader set={currentSet} />
 
       <MetaTable data={data} />
 

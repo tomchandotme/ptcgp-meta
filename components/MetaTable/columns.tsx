@@ -20,11 +20,11 @@ export const columns: ColumnDef<ParsedMetaRow>[] = [
       const nameContent = pokemonNames.map((name, i) => (
         <span
           key={i}
-          className={`leading-none tracking-tight ${
+          className={
             i === 0
-              ? "text-foreground font-bold"
-              : "text-muted-foreground text-sm font-medium"
-          }`}
+              ? "font-display text-foreground text-lg leading-none font-semibold tracking-tight"
+              : "text-muted-foreground text-sm leading-none font-medium"
+          }
         >
           {name}
         </span>
@@ -37,7 +37,7 @@ export const columns: ColumnDef<ParsedMetaRow>[] = [
               <div
                 key={i}
                 className={cn(
-                  "relative size-10 overflow-hidden drop-shadow transition-transform hover:z-10 hover:scale-110",
+                  "relative size-10 overflow-hidden drop-shadow motion-safe:transition-transform motion-safe:hover:z-10 motion-safe:hover:scale-110",
                   {
                     "-mr-4 mb-4": images.length === 2 && i === 0,
                     "mt-4": images.length === 2 && i === 1,
@@ -60,7 +60,7 @@ export const columns: ColumnDef<ParsedMetaRow>[] = [
               href={deckUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex flex-col gap-0.5"
+              className="focus-visible:ring-ring flex flex-col gap-0.5 rounded-sm hover:underline focus-visible:ring-2 focus-visible:outline-none"
             >
               {nameContent}
             </a>
@@ -93,8 +93,19 @@ export const columns: ColumnDef<ParsedMetaRow>[] = [
           <div className="text-muted-foreground text-center font-mono">-</div>
         );
       return (
-        <div className="text-muted-foreground text-center font-mono">
-          {val.toFixed(1)}%
+        <div className="flex flex-col items-center gap-1.5">
+          <span className="font-mono text-sm tabular-nums">
+            {val.toFixed(1)}%
+          </span>
+          <div
+            className="bg-muted h-1 w-16 overflow-hidden rounded-full"
+            aria-hidden="true"
+          >
+            <div
+              className="bg-energy h-full rounded-full"
+              style={{ width: `${val > 0 ? Math.max(val, 4) : 0}%` }}
+            />
+          </div>
         </div>
       );
     },

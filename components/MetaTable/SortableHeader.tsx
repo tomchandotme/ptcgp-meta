@@ -27,7 +27,7 @@ export const SortableHeader = <TData, TValue>({
       aria-label={`Sort by ${title}, currently ${sortState}`}
       className={cn(
         "data-[state=open]:bg-accent -ml-3 h-8",
-        isSorted && "text-foreground font-semibold",
+        isSorted && "text-foil font-semibold",
       )}
       onClick={() => column.toggleSorting(isSorted === "asc")}
     >
