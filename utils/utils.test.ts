@@ -104,6 +104,71 @@ describe("parseDeckName", () => {
   test("handles empty or null input", () => {
     expect(parseDeckName("")).toEqual([]);
   });
+
+  test("handles Team Rocket's prefixes", () => {
+    expect(parseDeckName("Team Rocket's Weezing ex")).toEqual([
+      "Team Rocket's Weezing ex",
+    ]);
+    expect(parseDeckName("Team Rocket's Weezing ex Hoopa ex")).toEqual([
+      "Team Rocket's Weezing ex",
+      "Hoopa ex",
+    ]);
+    expect(
+      parseDeckName("Team Rocket's Weezing ex Team Rocket's Magmar"),
+    ).toEqual(["Team Rocket's Weezing ex", "Team Rocket's Magmar"]);
+    expect(
+      parseDeckName("Team Rocket's Raticate ex Alolan Ninetales ex"),
+    ).toEqual(["Team Rocket's Raticate ex", "Alolan Ninetales ex"]);
+    expect(parseDeckName("Team Rocket's Mr. Mime")).toEqual([
+      "Team Rocket's Mr. Mime",
+    ]);
+  });
+
+  test("handles Team Rocket's with curly apostrophe", () => {
+    expect(parseDeckName("Team Rocket’s Weezing ex Hoopa ex")).toEqual([
+      "Team Rocket’s Weezing ex",
+      "Hoopa ex",
+    ]);
+  });
+
+  test("handles Team Rocket prefix without possessive", () => {
+    expect(parseDeckName("Team Rocket Weezing ex")).toEqual([
+      "Team Rocket Weezing ex",
+    ]);
+  });
+
+  test("handles multi-word paradox and Tapu species", () => {
+    expect(parseDeckName("Flutter Mane ex")).toEqual(["Flutter Mane ex"]);
+    expect(parseDeckName("Koraidon ex Great Tusk")).toEqual([
+      "Koraidon ex",
+      "Great Tusk",
+    ]);
+    expect(parseDeckName("Tapu Koko ex")).toEqual(["Tapu Koko ex"]);
+    expect(parseDeckName("Iron Hands")).toEqual(["Iron Hands"]);
+    expect(parseDeckName("Roaring Moon Iron Valiant")).toEqual([
+      "Roaring Moon",
+      "Iron Valiant",
+    ]);
+  });
+
+  test("handles irregular species names from the PTCGP card list", () => {
+    expect(parseDeckName("Mr. Mime")).toEqual(["Mr. Mime"]);
+    expect(parseDeckName("Galarian Mr. Mime")).toEqual(["Galarian Mr. Mime"]);
+    expect(parseDeckName("Mime Jr.")).toEqual(["Mime Jr."]);
+    expect(parseDeckName("Type: Null")).toEqual(["Type: Null"]);
+    expect(parseDeckName("Farfetch'd")).toEqual(["Farfetch'd"]);
+    expect(parseDeckName("Jangmo-o")).toEqual(["Jangmo-o"]);
+    expect(parseDeckName("Porygon2")).toEqual(["Porygon2"]);
+    expect(parseDeckName("Fan Rotom")).toEqual(["Fan Rotom"]);
+    expect(parseDeckName("Dawn Wings Necrozma")).toEqual([
+      "Dawn Wings Necrozma",
+    ]);
+    expect(parseDeckName("Ultra Necrozma ex")).toEqual(["Ultra Necrozma ex"]);
+    expect(parseDeckName("Nidoran♀ Nidoran♂")).toEqual([
+      "Nidoran♀",
+      "Nidoran♂",
+    ]);
+  });
 });
 
 describe("getWinRateColor", () => {
