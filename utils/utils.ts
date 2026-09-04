@@ -44,6 +44,61 @@ const DECK_NAME_PREFIXES = [
   "Wellspring Mask",
   "Hearthflame Mask",
   "Cornerstone Mask",
+  "Team Rocket's",
+  "Team Rocket",
+  "Dawn Wings",
+  "Dusk Mane",
+  "Rapid Strike",
+  "Single Strike",
+];
+
+/**
+ * Multi-word / irregular species from the PTCGP card list that the generic
+ * Capitalized-token matcher would split (Tapu, paradox beasts, Rotom forms, etc.).
+ */
+const DECK_NAME_SPECIES = [
+  "Type: Null",
+  "Mr. Mime",
+  "Mr. Rime",
+  "Mime Jr.",
+  "Farfetch'd",
+  "Tapu Koko",
+  "Tapu Lele",
+  "Tapu Bulu",
+  "Tapu Fini",
+  "Flutter Mane",
+  "Great Tusk",
+  "Scream Tail",
+  "Brute Bonnet",
+  "Slither Wing",
+  "Sandy Shocks",
+  "Iron Treads",
+  "Iron Bundle",
+  "Iron Hands",
+  "Iron Jugulis",
+  "Iron Moth",
+  "Iron Thorns",
+  "Roaring Moon",
+  "Iron Valiant",
+  "Walking Wake",
+  "Iron Leaves",
+  "Gouging Fire",
+  "Raging Bolt",
+  "Iron Boulder",
+  "Iron Crown",
+  "Fan Rotom",
+  "Frost Rotom",
+  "Heat Rotom",
+  "Mow Rotom",
+  "Wash Rotom",
+  "Ultra Necrozma",
+  "Jangmo-o",
+  "Hakamo-o",
+  "Kommo-o",
+  "Porygon2",
+  "Nidoran♀",
+  "Nidoran♂",
+  "Flabébé",
 ];
 
 const DECK_NAME_SUFFIXES = [
@@ -55,17 +110,31 @@ const DECK_NAME_SUFFIXES = [
   "Snowy Form",
 ];
 
-const DECK_NAME_PATTERN_SOURCE = `(?:(?:${DECK_NAME_PREFIXES.join("|")})\\s+)*[A-Z][a-z]*(?:-[A-Z][a-z]*)*(?:\\s+(?:${DECK_NAME_SUFFIXES.join("|")}))*`;
+const escapeRegExp = (value: string) =>
+  value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const toPatternAlt = (values: readonly string[]) =>
+  [...values]
+    .sort((a, b) => b.length - a.length)
+    .map((value) => escapeRegExp(value).replace(/'/g, "['\u2019]"))
+    .join("|");
+
+const STANDARD_SPECIES =
+  "[A-Z][A-Za-z\\u00C0-\\u024F]*\\d?(?:-[A-Za-z]+)*[♀♂]?";
+
+const DECK_NAME_PATTERN_SOURCE = `(?:(?:${toPatternAlt(DECK_NAME_PREFIXES)})\\s+)*(?:${toPatternAlt(DECK_NAME_SPECIES)}|${STANDARD_SPECIES})(?:\\s+(?:${toPatternAlt(DECK_NAME_SUFFIXES)}))*`;
 
 const DECK_NAME_PATTERN = new RegExp(DECK_NAME_PATTERN_SOURCE, "g");
 
 /**
  * Parses a deck name into individual Pokémon names.
- * Handles prefixes like "Mega", regional prefixes ("Alolan", "Galarian", "Hisuian", "Paldean"),
- * and suffixes like "ex".
+ * Handles prefixes like "Mega", "Team Rocket's", regional prefixes
+ * ("Alolan", "Galarian", "Hisuian", "Paldean"), multi-word species from the
+ * PTCGP card list, and suffixes like "ex".
  *
  * Example: "Mega Alolan Exeggutor ex" -> ["Mega Alolan Exeggutor ex"]
  * Example: "Palkia ex Dialga ex" -> ["Palkia ex", "Dialga ex"]
+ * Example: "Team Rocket's Weezing ex Hoopa ex" -> ["Team Rocket's Weezing ex", "Hoopa ex"]
  */
 export function parseDeckName(deck: string): string[] {
   if (!deck) return [];

@@ -44,7 +44,7 @@ export default function Loading() {
                 <TableRow key={i}>
                   <TableCell>
                     <div className="flex items-center gap-3">
-                      <Skeleton className="h-10 w-16 rounded-sm" />
+                      <Skeleton className="h-14 w-16 rounded-sm" />
                       <div className="space-y-1">
                         <Skeleton className="h-4 w-28" />
                         <Skeleton className="h-3 w-20" />
